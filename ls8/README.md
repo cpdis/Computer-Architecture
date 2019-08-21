@@ -60,8 +60,14 @@ but you'll have to implement those three above instructions first!
 ## Step 0: IMPORTANT: inventory what is here!
 
 * Make a list of files here.
+> **cpu.py** -> the main CPU functionality
+
+> **ls8.py** -> runs the emulator for the LambdaSchool-8 computer
 * Write a short 3-10-word description of what each file does.
 * Note what has been implemented, and what hasn't.
+> **cpu.py** -> Methods: load() [loads a program into memory], alu(op, reg_a, reg_b) [runs ALU operations], trace() [prints out the CPU state], run() [runs the CPU]
+
+> **ls8.py** -> A new CPU has been created, loaded, and run
 * Read this whole file.
 * Skim the spec.
 
