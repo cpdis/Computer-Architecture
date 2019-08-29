@@ -94,6 +94,8 @@ class CPU:
         MUL = 0b10100010
         PUSH = 0b01000101
         POP = 0b01000110
+        CALL = 0b01010000
+        RET = 0b00010001
 
         running = True
 
@@ -144,5 +146,23 @@ class CPU:
                 self.reg[register_address] = value
                 self.reg[7] = (self.SP + 1) % 255
                 self.PC += 2
+            elif command == CALL:
+                # 1. The address of the ** *instruction*** _directly after_ `CALL` is
+                # pushed onto the stack. This allows us to return to where we left off when the subroutine finishes executing.
+                # 2. The PC is set to the address stored in the given register. We jump to that location in RAM and execute the first instruction in the subroutine. The PC can move forward or backwards from its current location.
+                register_address = self.ram[self.PC + 1]
+                address_to_jump_to = self.reg[register_address]
+                # store address of the next instruction
+                next_instruction_address = self.PC + 2
+                self.reg[7] = (self.reg[7] - 1) % 255
+                self.SP = self.reg[7]
+                self.ram[self.SP] = next_instruction_address
+                # set PC to the address to jump to
+                self.PC = address_to_jump_to
+            elif command == RET:
+                self.SP = self.reg[7]
+                address_to_return_to = self.ram[self.SP]
+                self.reg[7] = (self.SP + 1) % 255
+                self.PC = address_to_return_to
             else:
                 print("Unknown instruction.")
