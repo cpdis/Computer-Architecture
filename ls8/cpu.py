@@ -11,7 +11,7 @@ class CPU:
         self.reg = [0] * 8
         self.pc = 0
         self.SP = 7
-        self.reg[7] = 0xF4
+        self.reg[7] = 255
 
     def ram_read(self, MAR):
         return self.ram[MAR]
@@ -129,14 +129,20 @@ class CPU:
                 # 1. Decrement the `SP`.
                 # 2. Copy the value in the given register to the address pointed to by
                 # `SP`.
-                self.SP -= 1
-                # value = self.ram[self.pc + 1]
-                self.pc += 2
+                self.reg[7] = (self.reg[7] - 1) % 255
+                self.SP = self.reg[7]                ​
+                register_address = self.ram[self.PC + 1]
+                value = self.reg[register_address]
+                self.ram[self.SP] = value
+                self.PC += 2
             elif IR == POP:
                 # 1. Copy the value from the address pointed to by `SP` to the given register.
                 # 2. Increment `SP`.
-                # value = self.ram[self.reg[self.SP]]
-                self.SP += 1
-                self.pc += 2
+                self.SP = self.reg[7]
+                value = self.ram[self.SP]
+                register_address = self.ram[self.PC + 1]
+                self.reg[register_address] = value
+                self.reg[7] = (self.SP + 1) % 255
+                self.PC += 2
             else:
                 print("Unknown instruction.")
