@@ -96,6 +96,7 @@ class CPU:
         POP = 0b01000110
         CALL = 0b01010000
         RET = 0b00010001
+        JMP = 0b01010100
 
         running = True
 
@@ -164,5 +165,9 @@ class CPU:
                 address_to_return_to = self.ram[self.SP]
                 self.reg[7] = (self.SP + 1) % 255
                 self.pc = address_to_return_to
+            elif IR == JMP:
+                register_address = self.ram[self.pc + 1]
+                address_to_jump_to = self.reg[register_address]
+                self.pc = address_to_jump_to
             else:
                 print("Unknown instruction.")
